@@ -12,14 +12,10 @@ public class Date {
 
   @Override
   public String toString() {
-    return month + " " + day + " " + year;
-  }
-
-  String format() {
     return month + "/" + day + "/" + year;
   }
 
-  String toEncode(String delim) {
-    return month + delim + day + delim + year;
+  String toEncode(String delimiter) {
+    return month + delimiter + day + delimiter + year;
   }
 }

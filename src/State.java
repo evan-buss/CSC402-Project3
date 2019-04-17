@@ -1,3 +1,5 @@
+import java.text.DecimalFormat;
+
 public class State {
 
   String name = "";
@@ -9,6 +11,9 @@ public class State {
   int orderOfAdmission = 0;
   String capital = "";
   private Date admissionDate;
+
+  private DecimalFormat df = new DecimalFormat("#,###.##");
+
 
   State() {
   }
@@ -23,16 +28,14 @@ public class State {
 
   @Override
   public String toString() {
-    return "State{" +
-        "name='" + name + '\'' +
-        ", population=" + population +
-        ", popRank=" + popRank +
-        ", popDensity=" + popDensity +
-        ", areaOfState=" + areaOfState +
-        ", areaRank=" + areaRank +
-        ", orderOfAdmission=" + orderOfAdmission +
-        ", capital='" + capital + '\'' +
-        ", admissionDate=" + admissionDate +
-        '}';
+    return name +
+        "\n  Population: " + df.format(population) + " people" +
+        "\n  Capital: " + capital +
+        "\n  Population Rank: " + popRank + " of 50" +
+        "\n  Population Density: " + df.format(popDensity) +
+        "\n  Area: " + df.format(areaOfState) + " square miles" +
+        "\n  Area Rank: " + areaRank + " of 50" +
+        "\n  Order of Admission: " + orderOfAdmission + " of 50" +
+        "\n  Admission Date: " + admissionDate;
   }
 }
