@@ -1,0 +1,39 @@
+Project 3:
+  Due early in the last week of classes.
+  Encoder
+    states are stored in a text file. Size isn't uniform
+    States.enc will be accessed as a random access file.
+    Allowed us to use an "array of state"
+      - Not entirely sure what that means
+
+    Random Access File:
+      C++: fstream
+      Java: RandomAccessFile
+
+  States Lookup Submenu
+    P)opulation
+    #)Population Rank
+    >)Population Density
+    A)rea
+    $)Area Rank
+    <)Area Density
+    D)ate of Admission
+    O)rder of Admission
+    C)apital
+
+  Mainpage of Doxygen should have high-level description of program. Place design
+  and other issue narrative in readme.
+    - Not sure if this applies to Javadoc
+
+  README should be a word file to format better.
+
+  the population,
+  population rank,
+  population density,
+  area,
+  area rank,
+  month,
+  day,
+  year of admission to the US,
+  order of admission to the US, and
+  state capital
