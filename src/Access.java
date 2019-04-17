@@ -1,8 +1,22 @@
+/*
+* Author: Evan Buss
+* Major: Computer Science
+* Creation Date: April 17, 2019
+* Due Date: April 23, 2019
+* Course: CSC402 - Data Structures 2
+* Professor: Dr. Spiegel
+* Assignment: Project #3
+* Filename: Access.java
+* Purpose:  Access the data from an encoded file.
+* Language: Java (Version 8)
+* Compilation Command: javac Access.java
+* Execution Command: java Access [index file] [encode file]
+*/
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Scanner;
-
 
 /**
  * Access data from an encoded states data file.
@@ -10,7 +24,8 @@ import java.util.Scanner;
  * <ul>
  * <li>Parse the states.idx file into a HashMap to enable fast retrievals.</li>
  * <li>Use the HashMap to find the state's index in the encoded file.</li>
- * <li>Use a RandomAccessFile to seek to the given position in the encoded file</li>
+ * <li>Use a RandomAccessFile to seek to the given position in the encoded
+ * file</li>
  * <li>Read from the given position until DELIMITER is encountered</li>
  * <li>Split the new string on the FIELD_DELIMITER</li>
  * <li>Load this data into a {@link State} object</li>
@@ -35,7 +50,6 @@ public class Access {
    */
   private static HashMap<String, Integer> states = new HashMap<>();
   private static DecimalFormat df = new DecimalFormat("#,###.##");
-
 
   public static void main(String[] args) {
     if (args.length == 2) {
@@ -74,8 +88,7 @@ public class Access {
 
         int splitPos = line.lastIndexOf(" ");
 
-        states.put(line.substring(0, splitPos),
-            Integer.parseInt(line.substring(splitPos + 1)));
+        states.put(line.substring(0, splitPos), Integer.parseInt(line.substring(splitPos + 1)));
       }
       reader.close();
     } catch (IOException e) {
@@ -84,7 +97,6 @@ public class Access {
     }
     System.out.println();
   }
-
 
   /**
    * Display main menu and handle user inputs.
@@ -128,7 +140,7 @@ public class Access {
         case "t":
           System.out.println("Total Population: ");
           int totalPopulation = calculateTotalPopulation();
-          System.out.println("  " + df.format(totalPopulation));
+          System.out.println("  " + df.format(totalPopulation) + " people.");
           break;
         case "a":
           calculateAverages();
@@ -143,7 +155,6 @@ public class Access {
     }
   }
 
-
   /**
    * Display submenu that reads a state name from the user then loads the data
    * from the encoded file.
@@ -154,7 +165,7 @@ public class Access {
     String input, stateName;
     boolean run = true;
 
-    //  Get user input
+    // Get user input
     System.out.print("  State Name: ");
     stateName = keyboard.nextLine();
 
@@ -162,20 +173,21 @@ public class Access {
 
     if (state == null) {
       run = false;
-      System.err.println("Error: State not found!");
+      System.err.println("  Error: State not found!");
     }
 
     while (run) {
-      System.out.println("\n  P)opulation\n" +
-          "  #)Population Rank\n" +
-          "  >)Population Density\n" +
-          "  A)rea\n" +
-          "  $)Area Rank\n" +
-          // "  <)Area Density\n" +
-          "  D)ate of Admission\n" +
-          "  O)rder of Admission\n" +
-          "  C)apital\n" +
-          "  B)ack to Main Menu");
+      System.out.println(
+          "\n  P)opulation\n" +
+              "  #)Population Rank\n" +
+              "  >)Population Density\n" +
+              "  A)rea\n" +
+              "  $)Area Rank\n" +
+              // " <)Area Density\n" +
+              "  D)ate of Admission\n" +
+              "  O)rder of Admission\n" +
+              "  C)apital\n" +
+              "  B)ack to Main Menu");
 
       System.out.print("  > ");
       input = keyboard.nextLine();
@@ -183,33 +195,29 @@ public class Access {
 
       switch (input.toLowerCase()) {
         case "p":
-          System.out.println("Population: " + df.format(state.population) +
-              " people");
+          System.out.println("Population: " + df.format(state.population) + " people");
           break;
         case "#":
           System.out.println("Population Rank: " + state.popRank + " of 50");
           break;
         case ">":
-          System.out.println("Population Density: " +
-              df.format(state.popDensity) +
-              " people/square mile");
+          System.out.println("Population Density: " + df.format(state.popDensity) + " people/square mile");
           break;
         case "a":
-          System.out.println("Area: " + df.format(state.areaOfState) +
-              " square miles");
+          System.out.println("Area: " + df.format(state.areaOfState) + " square miles");
           break;
         case "$":
           System.out.println("Area Rank: " + state.areaRank + " of 50");
           break;
         // case "<":
-        //   System.out.println("  " + df.format(state.areaOfState / (float) state.pop) + " square miles.");
-        //   break;
+        // System.out.println(" " + df.format(state.areaOfState / (float) state.pop) + "
+        // square miles.");
+        // break;
         case "d":
           System.out.println("Date of Admission: " + state.getAdmissionDate());
           break;
         case "o":
-          System.out.println("Order of Admission: " + state.orderOfAdmission +
-              " of 50");
+          System.out.println("Order of Admission: " + state.orderOfAdmission + " of 50");
           break;
         case "c":
           System.out.println("State Capital: " + state.capital);
@@ -224,8 +232,8 @@ public class Access {
   }
 
   /**
-   * Load state data from the encoded file by searching the HashMap for a
-   * specific state name.
+   * Load state data from the encoded file by searching the HashMap for a specific
+   * state name.
    * <p>
    * Access the encoded file by using the provided index from the HashMap using
    * the seek() function of the RandomAccessFile.
@@ -254,7 +262,7 @@ public class Access {
 
     String[] parsedData = output.toString().split(FIELD_DELIMITER);
 
-    //Create State here
+    // Create State here
     State state = new State();
     state.name = parsedData[0];
     state.population = Integer.parseInt(parsedData[1]);
@@ -262,8 +270,7 @@ public class Access {
     state.popDensity = Float.parseFloat(parsedData[3]);
     state.areaOfState = Integer.parseInt(parsedData[4]);
     state.areaRank = Integer.parseInt(parsedData[5]);
-    state.setAdmissionDate(Integer.parseInt(parsedData[6]),
-        Integer.parseInt(parsedData[7]),
+    state.setAdmissionDate(Integer.parseInt(parsedData[6]), Integer.parseInt(parsedData[7]),
         Integer.parseInt(parsedData[8]));
     state.orderOfAdmission = Integer.parseInt(parsedData[9]);
     state.capital = parsedData[10];
@@ -272,8 +279,8 @@ public class Access {
   }
 
   /**
-   * Calculate the total population of the United States by parsing all data
-   * from the encoded file and tallying the populations of each state.
+   * Calculate the total population of the United States by parsing all data from
+   * the encoded file and tallying the populations of each state.
    *
    * @return Total population
    */
@@ -299,9 +306,7 @@ public class Access {
 
     int totalPopulation = calculateTotalPopulation();
 
-    System.out.println("  " +
-        df.format(totalPopulation / (float) stateCount) +
-        " people.");
+    System.out.println("  " + df.format(totalPopulation / (float) stateCount) + " people.");
 
     System.out.println("Average Area Per State: ");
 
@@ -313,17 +318,14 @@ public class Access {
       }
     }
 
-    System.out.println("  " +
-        df.format(totalArea / (float) stateCount) + " square miles.");
+    System.out.println("  " + df.format(totalArea / (float) stateCount) + " square miles.");
   }
-
 
   /**
    * Displays all possible state choices to the user.
    */
   private static void displayStates() {
-    System.out.println("Number: " + states.keySet().size());
-    System.out.println("State List: ");
+    System.out.println("\nState List: ");
     for (String state : states.keySet()) {
       System.out.println("  " + state);
     }

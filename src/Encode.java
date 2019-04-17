@@ -1,3 +1,19 @@
+/*
+* Author: Evan Buss
+* Major: Computer Science
+* Creation Date: April 17, 2019
+* Due Date: April 23, 2019
+* Course: CSC402 - Data Structures 2
+* Professor: Dr. Spiegel
+* Assignment: Project #3
+* Filename: Encode.java
+* Purpose:  Encode a file of state data for easy data
+*           retrieval
+* Language: Java (Version 8)
+* Compilation Command: javac Encode.java
+* Execution Command: java Encode [state file name]
+*/
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +25,8 @@ import java.util.Scanner;
  * Creates two new files:
  * <ul>
  * <li>states.enc - new encoded file</li>
- * <li>states.idx - new index file that contains a state name and its position in
- * the encoded file</li>
+ * <li>states.idx - new index file that contains a state name and its position
+ * in the encoded file</li>
  * </ul>
  */
 
@@ -65,8 +81,8 @@ public class Encode {
   }
 
   /**
-   * Writes state objects to states.enc in encoded format.
-   * Writes state names and their position in the encoded file to states.idx
+   * Writes state objects to states.enc in encoded format. Writes state names and
+   * their position in the encoded file to states.idx
    *
    * @throws IOException If new files cannot be created.
    */
@@ -110,7 +126,6 @@ public class Encode {
     encodedWriter.close();
   }
 
-
   /**
    * Writes data to the BufferedWriter and inserts a space if addSpace is true.
    * This function is used to write the data and return the data length in order
@@ -122,14 +137,11 @@ public class Encode {
    * @return Number of characters written to writer.
    * @throws IOException If not able to write to file.
    */
-  private static int writeData(String data,
-                               BufferedWriter writer,
-                               boolean addSpace) throws IOException {
+  private static int writeData(String data, BufferedWriter writer, boolean addSpace) throws IOException {
     String encodedData = addSpace ? data + FIELD_DELIMITER : data;
     writer.write(encodedData);
     return encodedData.length();
   }
-
 
   /**
    * Create state objects from a properly formatted state data file.
@@ -147,20 +159,11 @@ public class Encode {
       System.err.println("Could not find file...");
       System.exit(-1);
     }
-    
+
     /*
-    Field Order in States File:
-     State Name
-     Population,
-     Population Rank,
-     Population Density,
-     Area,
-     Area Rank,
-     Month,
-     Day,
-     Year of Admission,
-     Order of Admission,
-     State Capital
+     * Field Order in States File: State Name Population, Population Rank,
+     * Population Density, Area, Area Rank, Month, Day, Year of Admission, Order of
+     * Admission, State Capital
      */
 
     while (fileScanner.hasNextLine()) {
