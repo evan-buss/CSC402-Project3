@@ -137,7 +137,9 @@ public class Encode {
    * @return Number of characters written to writer.
    * @throws IOException If not able to write to file.
    */
-  private static int writeData(String data, BufferedWriter writer, boolean addSpace) throws IOException {
+  private static int writeData(String data,
+                               BufferedWriter writer,
+                               boolean addSpace) throws IOException {
     String encodedData = addSpace ? data + FIELD_DELIMITER : data;
     writer.write(encodedData);
     return encodedData.length();
@@ -161,9 +163,18 @@ public class Encode {
     }
 
     /*
-     * Field Order in States File: State Name Population, Population Rank,
-     * Population Density, Area, Area Rank, Month, Day, Year of Admission, Order of
-     * Admission, State Capital
+     * Field Order in States File:
+     * State Name
+     * Population,
+     * Population Rank,
+     * Population Density,
+     * Area,
+     * Area Rank,
+     * Month,
+     * Day,
+     * Year of Admission,
+     * Order of Admission,
+     * State Capital
      */
 
     while (fileScanner.hasNextLine()) {
