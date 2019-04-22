@@ -1,17 +1,17 @@
 /*
-* Author: Evan Buss
-* Major: Computer Science
-* Creation Date: April 17, 2019
-* Due Date: April 23, 2019
-* Course: CSC402 - Data Structures 2
-* Professor: Dr. Spiegel
-* Assignment: Project #3
-* Filename: Access.java
-* Purpose:  Access the data from an encoded file.
-* Language: Java (Version 8)
-* Compilation Command: javac Access.java
-* Execution Command: java Access [index file] [encode file]
-*/
+ * Author: Evan Buss
+ * Major: Computer Science
+ * Creation Date: April 17, 2019
+ * Due Date: April 23, 2019
+ * Course: CSC402 - Data Structures 2
+ * Professor: Dr. Spiegel
+ * Assignment: Project #3
+ * Filename: Access.java
+ * Purpose:  Access the data from an encoded file.
+ * Language: Java (Version 8)
+ * Compilation Command: javac Access.java
+ * Execution Command: java Access [index file] [encode file]
+ */
 
 import java.io.*;
 import java.text.DecimalFormat;
@@ -41,30 +41,45 @@ public class Access {
    * Delimiter that separates individual state object files in given encoded file
    */
   private static final String FIELD_DELIMITER = "#";
-
+  /**
+   * Index file that contains the state's position in the encoded file.
+   */
   private static File indexFile;
+  /**
+   * Encoded file that can be read non-sequentially using seek()
+   */
   private static RandomAccessFile dataFile;
-
   /**
    * Stores state names with their index
    */
   private static HashMap<String, Integer> states = new HashMap<>();
+  /**
+   * Format long numbers with commas and 2 decimal places.
+   */
   private static DecimalFormat df = new DecimalFormat("#,###.##");
 
   public static void main(String[] args) {
     if (args.length == 2) {
       indexFile = new File(args[0]);
 
+      System.out.print("Index File: ");
+
       if (!indexFile.exists()) {
-        System.err.println("Cannot find given index file!");
+        System.err.println("Not found...");
         System.exit(-1);
       }
 
+      System.out.println("Loaded");
+
       try {
+        System.out.print("Encoded File: ");
         dataFile = new RandomAccessFile(args[1], "r");
       } catch (FileNotFoundException e) {
-        e.printStackTrace();
+        System.err.println("Not Found...");
+        System.exit(-1);
       }
+
+      System.out.println("Loaded");
 
       parseIndex();
       menu();
@@ -109,7 +124,7 @@ public class Access {
     while (run) {
       System.out.println("\nF)ull State Output\n" +
           "P)rint State Names\n" +
-          "L)ookup State Names\n" +
+          "L)ookup State Name\n" +
           "T)otal Population\n" +
           "A)verages\n" +
           "Q)uit");
@@ -121,14 +136,13 @@ public class Access {
       switch (input.toLowerCase()) {
         case "f":
           // Get user input
-          System.out.print("  State Name: ");
+          System.out.print("State Name: ");
           State state = getStateData(keyboard.nextLine());
-          System.out.println();
 
           if (state != null) {
-            System.out.println(state);
+            System.out.println("\n" + state);
           } else {
-            System.err.println("Invalid state name!");
+            System.err.println("Error: State not found!");
           }
           break;
         case "p":
@@ -140,7 +154,7 @@ public class Access {
         case "t":
           System.out.println("Total Population: ");
           int totalPopulation = calculateTotalPopulation();
-          System.out.println("  " + df.format(totalPopulation) + " people.");
+          System.out.println("  " + df.format(totalPopulation) + " people");
           break;
         case "a":
           calculateAverages();
@@ -150,7 +164,7 @@ public class Access {
           run = false;
           break;
         default:
-          System.out.println("Invalid Selection!\n");
+          System.err.println("  Invalid Selection!");
       }
     }
   }
@@ -166,14 +180,14 @@ public class Access {
     boolean run = true;
 
     // Get user input
-    System.out.print("  State Name: ");
+    System.out.print("State Name: ");
     stateName = keyboard.nextLine();
 
     State state = getStateData(stateName);
 
     if (state == null) {
       run = false;
-      System.err.println("  Error: State not found!");
+      System.err.println("Error: State not found!");
     }
 
     while (run) {
@@ -195,38 +209,38 @@ public class Access {
 
       switch (input.toLowerCase()) {
         case "p":
-          System.out.println("Population: " + df.format(state.population) + " people");
+          System.out.println(state.getPopulationF());
           break;
         case "#":
-          System.out.println("Population Rank: " + state.popRank + " of 50");
+          System.out.println(state.getPopRankF());
           break;
         case ">":
-          System.out.println("Population Density: " + df.format(state.popDensity) + " people/square mile");
+          System.out.println(state.getPopDensityF());
           break;
         case "a":
-          System.out.println("Area: " + df.format(state.areaOfState) + " square miles");
+          System.out.println(state.getAreaOfStateF());
           break;
         case "$":
-          System.out.println("Area Rank: " + state.areaRank + " of 50");
+          System.out.println(state.getAreaRankF());
           break;
         // case "<":
         // System.out.println(" " + df.format(state.areaOfState / (float) state.pop) + "
         // square miles.");
         // break;
         case "d":
-          System.out.println("Date of Admission: " + state.getAdmissionDate());
+          System.out.println(state.getAdmissionDateF());
           break;
         case "o":
-          System.out.println("Order of Admission: " + state.orderOfAdmission + " of 50");
+          System.out.println(state.getOrderOfAdmissionF());
           break;
         case "c":
-          System.out.println("State Capital: " + state.capital);
+          System.out.println(state.getCapitalF());
           break;
         case "b":
           run = false;
           break;
         default:
-          System.out.println("Invalid Selection!");
+          System.err.println("  Invalid Selection!");
       }
     }
   }
@@ -306,7 +320,7 @@ public class Access {
 
     int totalPopulation = calculateTotalPopulation();
 
-    System.out.println("  " + df.format(totalPopulation / (float) stateCount) + " people.");
+    System.out.println("  " + df.format(totalPopulation / (float) stateCount) + " people");
 
     System.out.println("Average Area Per State: ");
 
@@ -318,7 +332,7 @@ public class Access {
       }
     }
 
-    System.out.println("  " + df.format(totalArea / (float) stateCount) + " square miles.");
+    System.out.println("  " + df.format(totalArea / (float) stateCount) + " square miles");
   }
 
   /**

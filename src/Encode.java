@@ -41,7 +41,7 @@ public class Encode {
    */
   private static final String FIELD_DELIMITER = "#";
   /**
-   * ArrayList of {@link State} objects to hold data from parsed file.
+   * ArrayList of {@link State} objects to hold all data from parsed file.
    */
   private static List<State> states;
 
@@ -93,6 +93,8 @@ public class Encode {
         new PrintWriter(new FileWriter("states.idx"));
 
     int stateIndex = 0;
+
+    // Write each field to the encoded file and increment the index by the encoded line's size.
     for (State state : states) {
       indexWriter.println(state.name + " " + stateIndex);
       stateIndex += writeData(state.name, encodedWriter, true);
@@ -129,7 +131,7 @@ public class Encode {
   /**
    * Writes data to the BufferedWriter and inserts a space if addSpace is true.
    * This function is used to write the data and return the data length in order
-   * to increment the index for writing positions to states.idx
+   * to increment the index for writing state positions to states.idx
    *
    * @param data     Value to be written to file
    * @param writer   Points to the file you want written to
@@ -177,6 +179,7 @@ public class Encode {
      * State Capital
      */
 
+    // Read each state from the data file to individual State objects
     while (fileScanner.hasNextLine()) {
       State state = new State();
 

@@ -1,16 +1,16 @@
 /*
-* Author: Evan Buss                                    
-* Major: Computer Science
-* Creation Date: April 17, 2019
-* Due Date: April 23, 2019
-* Course: CSC402 - Data Structures 2
-* Professor: Dr. Spiegel
-* Assignment: Project #3
-* Filename: Date.java
-* Purpose:  Store a simple Date object (Month/Day/Year)
-* Language: Java (Version 8)
-* Compilation Command: javac Date.java
-*/
+ * Author: Evan Buss
+ * Major: Computer Science
+ * Creation Date: April 17, 2019
+ * Due Date: April 23, 2019
+ * Course: CSC402 - Data Structures 2
+ * Professor: Dr. Spiegel
+ * Assignment: Project #3
+ * Filename: Date.java
+ * Purpose:  Store a simple Date object (Month/Day/Year)
+ * Language: Java (Version 8)
+ * Compilation Command: javac Date.java
+ */
 
 /**
  * Simple representation of a Date in history.
@@ -43,7 +43,12 @@ public class Date {
    */
   @Override
   public String toString() {
-    return month + "/" + day + "/" + year;
+
+
+    String[] months = {"January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"};
+
+    return months[month-1] + " " + day + ", " + year;
   }
 
   /**
