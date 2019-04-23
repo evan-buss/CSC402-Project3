@@ -142,7 +142,7 @@ public class Access {
           "L)ookup State Name\n" +
           "T)otal Population\n" +
           "A)verages\n" +
-          "Q)uit");
+          "E)xit program");
 
       System.out.print("  > ");
       input = keyboard.nextLine();
@@ -174,7 +174,7 @@ public class Access {
         case "a":
           calculateAverages();
           break;
-        case "q":
+        case "e":
           System.out.println("Exiting program...");
           run = false;
           break;
@@ -216,7 +216,7 @@ public class Access {
               "  D)ate of Admission\n" +
               "  O)rder of Admission\n" +
               "  C)apital\n" +
-              "  B)ack to Main Menu");
+              "  E)xit back to Main Menu");
 
       System.out.print("  > ");
       input = keyboard.nextLine();
@@ -247,7 +247,7 @@ public class Access {
         case "c":
           System.out.println(state.getCapitalF());
           break;
-        case "b":
+        case "e":
           run = false;
           break;
         default:
@@ -350,7 +350,7 @@ public class Access {
    * Displays all possible state choices to the user.
    */
   private static void displayStates() {
-    System.out.println("\nState List: ");
+    System.out.println("State List: ");
     for (String state : states.keySet()) {
       System.out.println("  " + state);
     }
