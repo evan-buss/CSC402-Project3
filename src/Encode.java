@@ -33,10 +33,6 @@ import java.util.Scanner;
 public class Encode {
 
   /**
-   * Delimiter to separate state objects in the encoded file
-   */
-  private static final String DELIMITER = "~";
-  /**
    * Delimiter to separate individual state fields in the encoded file.
    */
   private static final String FIELD_DELIMITER = "#";
@@ -73,7 +69,6 @@ public class Encode {
         System.err.println("States file could not be found...");
         System.exit(-1);
       }
-
     } else {
       System.out.println("Usage: java Encode [states file]");
       System.exit(-1);
@@ -92,11 +87,13 @@ public class Encode {
     PrintWriter indexWriter =
         new PrintWriter(new FileWriter("states.idx"));
 
-    int stateIndex = 0;
+    int stateIndex = 0; // End of state object
+    int prevIndex = 0; // Start of state object
 
     // Write each field to the encoded file and increment the index by the encoded line's size.
     for (State state : states) {
-      indexWriter.println(state.name + " " + stateIndex);
+      indexWriter.print(state.name + " " + prevIndex);
+
       stateIndex += writeData(state.name, encodedWriter, true);
       stateIndex += writeData(Integer.toString(state.population),
           encodedWriter, true);
@@ -114,9 +111,9 @@ public class Encode {
           encodedWriter, true);
       stateIndex += writeData(state.capital, encodedWriter, false);
 
-      // Write the DELIMITER character and increment index
-      encodedWriter.write(DELIMITER);
-      stateIndex += DELIMITER.length();
+      indexWriter.println(" " + stateIndex);
+
+      prevIndex = stateIndex;
 
       // Write data from buffer to data file
       encodedWriter.flush();
@@ -135,14 +132,14 @@ public class Encode {
    *
    * @param data     Value to be written to file
    * @param writer   Points to the file you want written to
-   * @param addSpace Whether or not a space should be inserted after data
+   * @param addDelim Whether or not a space should be inserted after data
    * @return Number of characters written to writer.
    * @throws IOException If not able to write to file.
    */
   private static int writeData(String data,
                                BufferedWriter writer,
-                               boolean addSpace) throws IOException {
-    String encodedData = addSpace ? data + FIELD_DELIMITER : data;
+                               boolean addDelim) throws IOException {
+    String encodedData = addDelim ? data + FIELD_DELIMITER : data;
     writer.write(encodedData);
     return encodedData.length();
   }
@@ -164,21 +161,6 @@ public class Encode {
       System.exit(-1);
     }
 
-    /*
-     * Field Order in States File:
-     * State Name
-     * Population,
-     * Population Rank,
-     * Population Density,
-     * Area,
-     * Area Rank,
-     * Month,
-     * Day,
-     * Year of Admission,
-     * Order of Admission,
-     * State Capital
-     */
-
     // Read each state from the data file to individual State objects
     while (fileScanner.hasNextLine()) {
       State state = new State();
@@ -193,7 +175,7 @@ public class Encode {
           fileScanner.nextInt(),
           fileScanner.nextInt());
       state.orderOfAdmission = fileScanner.nextInt();
-      state.capital = fileScanner.next();
+      state.capital = fileScanner.next().trim();
 
       fileScanner.nextLine();
 

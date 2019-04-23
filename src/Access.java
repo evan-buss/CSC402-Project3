@@ -16,6 +16,7 @@
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -34,10 +35,6 @@ import java.util.Scanner;
 public class Access {
 
   /**
-   * Delimiter that separates state objects in the given encoded file
-   */
-  private static final char DELIMITER = '~';
-  /**
    * Delimiter that separates individual state object files in given encoded file
    */
   private static final String FIELD_DELIMITER = "#";
@@ -52,12 +49,19 @@ public class Access {
   /**
    * Stores state names with their index
    */
-  private static HashMap<String, Integer> states = new HashMap<>();
+  private static Map<String, Integer[]> states = new HashMap<>();
   /**
    * Format long numbers with commas and 2 decimal places.
    */
   private static DecimalFormat df = new DecimalFormat("#,###.##");
 
+  /**
+   * Ensure both the index file and encoded file are present and readable.
+   * Then parse the index file and display the data access menu.
+   *
+   * @param args Should have two string (the index file followed by the
+   *             encoded file)
+   */
   public static void main(String[] args) {
     if (args.length == 2) {
       indexFile = new File(args[0]);
@@ -101,16 +105,27 @@ public class Access {
       BufferedReader reader = new BufferedReader(new FileReader(indexFile));
       while ((line = reader.readLine()) != null) {
 
-        int splitPos = line.lastIndexOf(" ");
+        // Get the last space character to get the end index
+        int index = line.lastIndexOf(" ");
+        String endIndex = line.substring(index + 1);
 
-        states.put(line.substring(0, splitPos), Integer.parseInt(line.substring(splitPos + 1)));
+        // Reduce the string to exclude the found index
+        line = line.substring(0, index);
+        // Get the start index by searching for the last space character again
+        String startIndex = line.substring(line.lastIndexOf(" ") + 1);
+        // Get the state by taking the beginning of the line.
+        String state = line.substring(0, line.lastIndexOf(" "));
+
+        // Add the state name and the start / end indices to the HashMap
+        states.put(state,
+            new Integer[]{Integer.parseInt(startIndex),
+                Integer.parseInt(endIndex)});
       }
       reader.close();
     } catch (IOException e) {
       e.printStackTrace();
       System.err.println("Error reading from index file.");
     }
-    System.out.println();
   }
 
   /**
@@ -171,7 +186,8 @@ public class Access {
 
   /**
    * Display submenu that reads a state name from the user then loads the data
-   * from the encoded file.
+   * from the encoded file. Once data is loaded, it prompts user to access individual
+   * fields
    *
    * @param keyboard Scanner pointing to user input
    */
@@ -197,7 +213,6 @@ public class Access {
               "  >)Population Density\n" +
               "  A)rea\n" +
               "  $)Area Rank\n" +
-              // " <)Area Density\n" +
               "  D)ate of Admission\n" +
               "  O)rder of Admission\n" +
               "  C)apital\n" +
@@ -223,10 +238,6 @@ public class Access {
         case "$":
           System.out.println(state.getAreaRankF());
           break;
-        // case "<":
-        // System.out.println(" " + df.format(state.areaOfState / (float) state.pop) + "
-        // square miles.");
-        // break;
         case "d":
           System.out.println(state.getAdmissionDateF());
           break;
@@ -256,27 +267,26 @@ public class Access {
    * @return State with loaded data or null if the state could not be found.
    */
   private static State getStateData(String stateName) {
-    int offset = states.getOrDefault(stateName.toUpperCase(), -1);
-    if (offset == -1) {
+    // int offset = states.getOrDefault(stateName.toUpperCase(), -1);
+    Integer[] offset = states.get(stateName.toUpperCase());
+    if (offset == null) {
       return null;
     }
 
-    byte c;
+    // Create buffer to hold bytes read from between the two offsets.
+    byte[] rawState = new byte[offset[1] - offset[0]];
 
-    StringBuilder output = new StringBuilder();
     try {
-      dataFile.seek(offset);
-      while ((c = (byte) dataFile.read()) != DELIMITER) {
-
-        output.append((char) c);
-      }
+      dataFile.seek(offset[0]); // Set the offset to the state's position
+      dataFile.read(rawState);  // Read rawState.length bytes from the file
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    String[] parsedData = output.toString().split(FIELD_DELIMITER);
+    // Convert the bytes to a string and split to get individual fields.
+    String[] parsedData = new String(rawState).split(FIELD_DELIMITER);
 
-    // Create State here
+    // Create new State with parsed data
     State state = new State();
     state.name = parsedData[0];
     state.population = Integer.parseInt(parsedData[1]);
@@ -284,7 +294,8 @@ public class Access {
     state.popDensity = Float.parseFloat(parsedData[3]);
     state.areaOfState = Integer.parseInt(parsedData[4]);
     state.areaRank = Integer.parseInt(parsedData[5]);
-    state.setAdmissionDate(Integer.parseInt(parsedData[6]), Integer.parseInt(parsedData[7]),
+    state.setAdmissionDate(Integer.parseInt(parsedData[6]),
+        Integer.parseInt(parsedData[7]),
         Integer.parseInt(parsedData[8]));
     state.orderOfAdmission = Integer.parseInt(parsedData[9]);
     state.capital = parsedData[10];
@@ -311,7 +322,7 @@ public class Access {
 
   /**
    * Calculates the average population and area per state in the United States.
-   * Retrieves the total population from totalPopulation and divides it by the
+   * Retrieves the total population from totalPopulation() and divides it by the
    * number of entries in the HashMap (number of states).
    */
   private static void calculateAverages() {
