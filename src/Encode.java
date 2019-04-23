@@ -12,6 +12,7 @@
 * Language: Java (Version 8)
 * Compilation Command: javac Encode.java
 * Execution Command: java Encode [state file name]
+*                    java Encode States90.txt
 */
 
 import java.io.*;
@@ -43,6 +44,8 @@ public class Encode {
 
   /**
    * Parses a state data file and then encodes the data into a new file
+   *
+   * Program invocation command should be "java Encode States90.txt"
    *
    * @param args Only argument is the state data file name
    */

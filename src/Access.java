@@ -11,6 +11,7 @@
  * Language: Java (Version 8)
  * Compilation Command: javac Access.java
  * Execution Command: java Access [index file] [encode file]
+ *                    java Access states.idx states.enc
  */
 
 import java.io.*;
@@ -25,11 +26,10 @@ import java.util.Scanner;
  * <ul>
  * <li>Parse the states.idx file into a HashMap to enable fast retrievals.</li>
  * <li>Use the HashMap to find the state's index in the encoded file.</li>
- * <li>Use a RandomAccessFile to seek to the given position in the encoded
- * file</li>
- * <li>Read from the given position until DELIMITER is encountered</li>
+ * <li>Use a RandomAccessFile to seek to the given start position in the encoded
+ * file and read until the given end position</li>
  * <li>Split the new string on the FIELD_DELIMITER</li>
- * <li>Load this data into a {@link State} object</li>
+ * <li>Load the fields data into a {@link State} object</li>
  * </ul>
  */
 public class Access {
@@ -58,8 +58,11 @@ public class Access {
   /**
    * Ensure both the index file and encoded file are present and readable.
    * Then parse the index file and display the data access menu.
+   * <p>
+   * Your program invocation command should look like
+   * "java Access states.idx states.enc"
    *
-   * @param args Should have two string (the index file followed by the
+   * @param args Should have two strings (the index file followed by the
    *             encoded file)
    */
   public static void main(String[] args) {
